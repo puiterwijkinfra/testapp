@@ -2,48 +2,24 @@ apiVersion: v1
 kind: DeploymentConfig
 metadata:
   labels:
-    app: static
-  name: static
+    app: nginx
+  name: nginx
 spec:
   replicas: 1
   selector:
-    app: static
-    deploymentconfig: static
-  strategy:
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 25%
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
+    app: nginx
+    deploymentconfig: nginx
   template:
     metadata:
       labels:
-        app: static
-        deploymentconfig: static
+        app: nginx
+        deploymentconfig: nginx
     spec:
       containers:
-      - image: static/static:latest
-        imagePullPolicy: Always
-        name: static
+      - image: quay.io/centos7/nginx-120-centos7
+        name: nginx
         ports:
         - containerPort: 8080
           protocol: TCP
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-  triggers:
-  - type: ConfigChange
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - static
-      from:
-        kind: ImageStreamTag
-        name: static:latest
-    type: ImageChange
+        - containerPort: 8443
+          protocol: TCP
