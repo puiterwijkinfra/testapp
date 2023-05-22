@@ -15,6 +15,10 @@ spec:
       containers:
       - image: quay.io/centos7/nginx-120-centos7
         name: nginx
+        command:
+        - nginx
+        - -g
+        - "daemon off;"
         ports:
         - containerPort: 8080
           protocol: TCP
