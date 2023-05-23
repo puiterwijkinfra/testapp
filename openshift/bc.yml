@@ -1,0 +1,50 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/puiterwijkinfra/testapp
+  labels:
+    app: testapp
+    app.kubernetes.io/component: testapp
+    app.kubernetes.io/instance: testapp
+    app.kubernetes.io/name: testapp
+    app.kubernetes.io/part-of: testapp-app
+    app.openshift.io/runtime: python
+    app.openshift.io/runtime-version: 3.9-ubi9
+  name: testapp
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: testapp:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: /appsrc/
+    git:
+      uri: https://github.com/puiterwijkinfra/testapp
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: python:3.9-ubi9
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - generic:
+      secretReference:
+        name: testapp-generic-webhook-secret
+    type: Generic
+  - github:
+      secretReference:
+        name: testapp-github-webhook-secret
+    type: GitHub
+  - imageChange: {}
+    type: ImageChange
+  - type: ConfigChange
